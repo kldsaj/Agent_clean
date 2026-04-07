@@ -1,0 +1,26 @@
+# Image Captioning Prompt
+# Used by ImageCaptioner (src/ingestion/transform/image_captioner.py)
+#
+# Variables available at runtime:
+#   - {image_path}   : Absolute path to the extracted image file
+#   - {context}      : Surrounding text from the document (before/after the image)
+#   - {doc_title}   : Document title or section heading
+#
+# Expected output:
+#   A concise, descriptive paragraph (3-8 sentences) that captures:
+#   1. What the image shows (diagram, chart, screenshot, etc.)
+#   2. Key data points or relationships visible
+#   3. How it relates to the surrounding document context
+#
+# PLACEHOLDER — to be refined in Phase C (ImageCaptioner implementation)
+
+You are an expert at analyzing document images.
+Given the image at {image_path} and the surrounding document context:
+---
+Context: {context}
+Document title: {doc_title}
+---
+
+Generate a detailed but concise description (3-8 sentences) of what this image shows,
+focusing on information that would be useful for a question-answering system.
+Return ONLY the description, in English.

@@ -1,0 +1,94 @@
+# Modular RAG MCP Server — Main Configuration File
+#
+# All configurable components are defined here.
+# Phase A only validates structure; actual network/I/O init happens per-phase.
+
+# ─── LLM Configuration ────────────────────────────────────────────────────────
+llm:
+  provider: openai          # azure | openai | ollama | deepseek
+  model: gpt-4o-mini        # Model identifier
+  # Provider-specific fields (filled by operator):
+  api_key: ""               # Set via OPENAI_API_KEY env var in production
+  # azure:
+  #   endpoint: ""
+  #   api_version: "2024-06-01"
+  #   deployment_name: ""
+  # ollama:
+  #   base_url: "http://localhost:11434"
+  # deepseek:
+  #   base_url: "https://api.deepseek.com"
+
+# ─── Embedding Configuration ───────────────────────────────────────────────────
+embedding:
+  provider: openai          # openai | azure | ollama
+  model: text-embedding-3-small
+  dimension: 1536            # Embedding vector dimension
+  batch_size: 100            # Batch size for bulk encoding
+  # api_key: ""             # Falls back to LLM api_key if not set
+
+# ─── Vision LLM Configuration (for Image Captioning) ─────────────────────────
+vision_llm:
+  provider: azure           # azure | openai (when vision support is available)
+  model: gpt-4o             # Vision-capable model
+  # api_key: ""
+
+# ─── Vector Store Configuration ────────────────────────────────────────────────
+vector_store:
+  backend: chroma           # chroma | qdrant | pinecone (qdrant/pinecone in future phases)
+  persist_directory: ./data/db/chroma  # Local Chroma persistence directory
+  collection_name: default  # Default collection name
+
+# ─── Retrieval Configuration ──────────────────────────────────────────────────
+retrieval:
+  sparse_backend: bm25      # bm25 | elasticsearch (elasticsearch in future phases)
+  top_k_dense: 20          # Dense retrieval candidate count
+  top_k_sparse: 20          # Sparse retrieval candidate count
+  fusion_algorithm: rrf      # rrf | weighted_sum
+  rerank_backend: cross_encoder  # none | cross_encoder | llm
+  top_k_final: 5            # Final returned result count
+  # bm25:
+  #   index_directory: ./data/db/bm25
+
+# ─── Ingestion Configuration ──────────────────────────────────────────────────
+ingestion:
+  chunk_size: 512           # Target chunk size in characters
+  chunk_overlap: 50         # Overlap between chunks
+  batch_size: 50            # Batch size for embedding/upsert
+  max_workers: 4            # Parallel processing workers
+  # loader:
+  #   default: pdf           # Default document loader type
+
+# ─── Evaluation Configuration ────────────────────────────────────────────────
+evaluation:
+  backends: [ragas, custom]  # ragas | custom | ragas_custom
+  # ragas:
+  #   metrics: [faithfulness, answer_relevancy, context_precision, context_recall]
+  # custom:
+  #   hit_rate_at: [1, 3, 5]
+  #   mrr_at: [1, 3, 5]
+
+# ─── Observability Configuration ───────────────────────────────────────────────
+observability:
+  enabled: true
+  logging:
+    log_file: logs/traces.jsonl   # JSON Lines trace log file
+    log_level: INFO               # DEBUG | INFO | WARNING | ERROR
+  detail_level: standard         # minimal | standard | verbose
+
+# ─── Dashboard Configuration ─────────────────────────────────────────────────
+dashboard:
+  enabled: true
+  port: 8501
+  traces_dir: ./logs
+  auto_refresh: true
+  refresh_interval: 5          # seconds
+
+# ─── Data Storage Paths ───────────────────────────────────────────────────────
+storage:
+  data_dir: ./data
+  documents_dir: ./data/documents
+  images_dir: ./data/images
+  db_dir: ./data/db
+  cache_dir: ./cache
+  ingestion_history_db: ./data/db/ingestion_history.db
+  image_index_db: ./data/db/image_index.db

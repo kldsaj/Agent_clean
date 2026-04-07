@@ -1,0 +1,7 @@
+# Sample Document Placeholder
+
+This is a minimal placeholder document for smoke testing the ingestion pipeline.
+Replace this file with a real PDF or Markdown document for actual testing.
+
+Content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+

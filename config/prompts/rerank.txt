@@ -1,0 +1,33 @@
+# LLM Rerank Prompt
+# Used by LLMReranker (src/libs/reranker/llm_reranker.py)
+#
+# This prompt instructs the LLM to rank candidate chunks by relevance to a query.
+#
+# Variables available at runtime:
+#   - {query}        : The user's search query
+#   - {chunks}       : A list of candidate chunks with their IDs
+#
+# Expected output:
+#   A JSON array of chunk IDs sorted by relevance (most relevant first):
+#   Example: [{"id": "chunk_3", "reason": "..."}, {"id": "chunk_1", "reason": "..."}, ...]
+#
+# PLACEHOLDER — to be refined in Phase D (LLMReranker implementation)
+
+You are an expert at evaluating the relevance of text chunks to a search query.
+
+Query: {query}
+
+Candidate chunks:
+{chunks}
+
+For each chunk, evaluate its relevance to the query on a scale of 1-5:
+  5 = Highly relevant — directly answers or strongly supports the query
+  4 = Relevant — contains useful information for the query
+  3 = Partially relevant — mentions related topics but doesn't fully address the query
+  2 = Tangentially relevant — only loosely connected to the query
+  1 = Not relevant — does not help answer the query
+
+Return a JSON array sorted by relevance (most relevant first):
+[{{"id": "<chunk_id>", "score": <1-5>, "reason": "<brief justification>"}}, ...]
+
+Return ONLY the JSON array, no additional text.

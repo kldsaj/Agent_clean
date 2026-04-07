@@ -1,0 +1,39 @@
+# Chunk Refinement Prompt
+# Used by ChunkRefiner (src/ingestion/transform/chunk_refiner.py)
+#
+# This prompt guides the LLM to:
+# 1. Merge logically related but physically separated paragraphs
+# 2. Remove noise (headers, footers, page numbers, artifacts)
+# 3. Ensure each chunk is self-contained and semantically coherent
+#
+# Variables available at runtime:
+#   - {chunk_text}   : The original text chunk
+#   - {chunk_index}  : Index of this chunk in the document
+#   - {total_chunks} : Total number of chunks in the document
+#   - {section_title}: Section heading if available
+#
+# Expected output:
+#   A refined, self-contained paragraph with:
+#   - No broken sentences from mid-paragraph splits
+#   - No page headers/footers/numbers
+#   - Coherent narrative within the chunk
+#
+# PLACEHOLDER — to be refined in Phase C (ChunkRefiner implementation)
+
+You are an expert at cleaning and refining text chunks from technical documents.
+Given the following text chunk:
+
+---
+Section: {section_title}
+Chunk {chunk_index} of {total_chunks}:
+---
+{chunk_text}
+---
+
+Perform the following refinements:
+1. Remove page headers, footers, page numbers, and boilerplate text
+2. Fix any broken sentences caused by mid-paragraph splits
+3. Preserve all substantive technical content
+4. Keep the chunk self-contained (readable without surrounding context)
+
+Return ONLY the refined chunk text. If no refinement is needed, return the original unchanged.

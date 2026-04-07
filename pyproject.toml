@@ -1,0 +1,127 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modular-rag-mcp-server"
+version = "0.1.0"
+description = "A modular, observable RAG (Retrieval-Augmented Generation) service framework with MCP protocol support"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Modular RAG Team" }
+]
+keywords = ["rag", "retrieval", "mcp", "llm", "knowledge-hub", "mcp-server"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+# Core dependencies — added as needed by each phase
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+# Optional dependencies groups
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+ingestion = [
+    "markitdown>=0.0.14",
+    "langchain>=0.3.0",
+    "langchain-text-splitters>=0.3.0",
+]
+storage = [
+    "chromadb>=0.5.0",
+]
+# Full dependencies for all features
+all = [
+    "openai>=1.30",
+    "azure-openai>=1.0",
+    "chromadb>=0.5.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "markitdown>=0.0.14",
+    "ragas>=0.1.0",
+    "streamlit>=1.38.0",
+]
+
+[project.scripts]
+modular-rag = "main:main"
+
+[project.urls]
+Homepage = "https://github.com/modular-rag/mcp-server"
+Documentation = "https://github.com/modular-rag/mcp-server#readme"
+
+# ─── Tooling configuration ────────────────────────────────────────────────────
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "unit: Unit tests — fast, no I/O, no network",
+    "integration: Integration tests — may use disk/network",
+    "e2e: End-to-end tests — full pipeline",
+    "slow: Tests that take > 10s",
+]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]  # line length handled by formatter
+fix = true
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["B011", "B018"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+show_missing = true
