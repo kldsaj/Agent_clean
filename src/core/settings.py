@@ -64,6 +64,7 @@ class RetrievalConfig:
 
 @dataclass
 class IngestionConfig:
+    splitter_backend: str = "recursive"
     chunk_size: int = 512
     chunk_overlap: int = 50
     batch_size: int = 50

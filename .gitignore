@@ -105,3 +105,9 @@ traces.jsonl
 .env.*.local
 secrets.yaml
 nonexistent_traces.jsonl/
+
+# macOS
+.DS_Store
+
+# Nested standalone repos (not submodules)
+claude-code/
